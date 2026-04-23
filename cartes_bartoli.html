@@ -309,6 +309,20 @@
         <div class="prompt-box" id="prompt"></div>
       </div>
     </div>
+
+    <div class="panel">
+      <h3>Document pédagogique Word</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin:0 0 8px">
+        Génère un prompt pour que Claude crée un document Word illustré, destiné aux parents et/ou à l’enfant, avec une réserve d’interprétation.
+      </p>
+      <div class="btn-row">
+        <button id="gen-word">Générer le prompt Word</button>
+        <button class="secondary" id="copy-word" disabled>Copier</button>
+      </div>
+      <div id="prompt-word-wrap" style="margin-top:10px;display:none">
+        <div class="prompt-box" id="prompt-word"></div>
+      </div>
+    </div>
   </aside>
 </main>
 
@@ -457,6 +471,64 @@ function buildPrompt() {
   return parts.join("\n");
 }
 
+
+function buildWordPrompt() {
+  const RESERVE = "Les éléments présentés dans ce document ne constituent pas une vérité absolue ni un diagnostic. Ils s’inscrivent dans une approche imaginative et métaphorique, s’appuyant sur le symbolisme des cartes créatives de Lise Bartoli, et ont pour vocation d’ouvrir un espace de réflexion pouvant favoriser une meilleure compréhension de soi et de ses émotions.";
+
+  const parts = [];
+  parts.push("Tu es un professionnel de l’accompagnement à la parentalité et de la psychologie narrative pour enfants. Tu maîttrises la création de documents Word structurés et bien présentés via la bibliothèque Python docx.");
+  parts.push("");
+  parts.push("Voici le tirage effectué avec les Cartes créatives de Lise Bartoli. Pour chaque carte, tu as sa catégorie, son nom, ses mots-clés (ou enseignement / pouvoir), sa symbolique et son interprétation telles que décrites par Lise Bartoli.");
+  parts.push("");
+  parts.push("════════ TIRAGE ════════");
+
+  DATA.themes.forEach(theme => {
+    const indices = [...selection[theme.id]];
+    if (!indices.length) return;
+    parts.push("");
+    parts.push("── " + theme.label.toUpperCase() + " ──");
+    indices.forEach(i => {
+      const c = theme.cartes[i];
+      parts.push("");
+      parts.push("Carte : " + c.nom);
+      if (c.mots_cles) parts.push("Mots-clés : " + c.mots_cles);
+      if (c.enseignement) parts.push("Enseignement : " + c.enseignement);
+      if (c.pouvoir) parts.push("Pouvoir : " + c.pouvoir);
+      if (c.symbolique) parts.push("Symbolique : " + c.symbolique.replace(/\s*
+\s*/g, " "));
+      if (c.interpretation) parts.push("Interprétation : " + c.interpretation.replace(/\s*
+\s*/g, " "));
+    });
+  });
+
+  parts.push("");
+  parts.push("════════ DOCUMENT À CRÉER ════════");
+  parts.push("");
+  parts.push("Crée un document Word (fichier .docx) pédagogique, chaleureux et bien structuré, destiné aux parents et/ou à l’enfant. Le document doit comporter les sections suivantes :");
+  parts.push("");
+  parts.push("1. **Page de titre** : un titre évoca­teur (ex. « Mon tirage de cartes » ou similaire), la date du jour, et une mise en page soignée.");
+  parts.push("");
+  parts.push("2. **Réserve d’interprétation** (encadré ou en italique, en introduction) :");
+  parts.push("   "" + RESERVE + """);
+  parts.push("");
+  parts.push("3. **Les cartes tirées** : pour chaque carte, une section avec :");
+  parts.push("   - Son nom et sa catégorie (Héros / Problème du héros / Allié / Objet magique)");
+  parts.push("   - Ses mots-clés / enseignement / pouvoir");
+  parts.push("   - Sa symbolique et son interprétation (en langage accessible, adapté à une lecture parent-enfant)");
+  parts.push("");
+  parts.push("4. **Le conte symbolique** : un récit court (15 à 25 phrases) intégrant naturellement toutes les cartes tirées, à lire à voix haute. Ton accessible et bienveillant. Dénouement positif et apaisant.");
+  parts.push("");
+  parts.push("5. **Questions pour partager ensemble** : 4 à 5 questions douces et ouvertes que le parent peut poser à l’enfant après la lecture, pour favoriser l’expression émotionnelle. Ex. : « Quel personnage tu préfères ? Pourquoi ? »");
+  parts.push("");
+  parts.push("6. **Message de clôture** : un court paragraphe d’encouragement adressé à l’enfant (et/ou au parent), valorisant ses ressources intérieures.");
+  parts.push("");
+  parts.push("Mise en forme : utilise des titres hiérarchisés (Heading 1, Heading 2), des couleurs douces et harmonieuses, des espaces aérés. Le document doit être imprimable et agréable à lire pour un enfant et son parent.");
+  parts.push("");
+  parts.push("Génère le code Python complet utilisant la bibliothèque `docx` (python-docx) pour créer ce fichier. Le fichier de sortie s’appellera `tirage_bartoli.docx`.");
+  return parts.join("
+");
+}
+
 document.getElementById("gen").onclick = () => {
   const total = Object.values(selection).reduce((s, set) => s + set.size, 0);
   if (total === 0) {
@@ -497,6 +569,30 @@ function showToast(msg){
   $toast.classList.add("show");
   setTimeout(() => $toast.classList.remove("show"), 1600);
 }
+
+
+document.getElementById("gen-word").onclick = () => {
+  const total = Object.values(selection).reduce((s, set) => s + set.size, 0);
+  if (total === 0) { showToast("Sélectionne au moins une carte."); return; }
+  document.getElementById("prompt-word").textContent = buildWordPrompt();
+  document.getElementById("prompt-word-wrap").style.display = "block";
+  document.getElementById("copy-word").disabled = false;
+};
+
+document.getElementById("copy-word").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(document.getElementById("prompt-word").textContent);
+    showToast("Copié dans le presse-papiers");
+  } catch (e) {
+    const r = document.createRange();
+    r.selectNode(document.getElementById("prompt-word"));
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+    showToast("Copié dans le presse-papiers");
+  }
+};
 
 render();
 </script>
