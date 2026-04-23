@@ -472,61 +472,60 @@ function buildPrompt() {
 }
 
 
+
+
 function buildWordPrompt() {
-  const RESERVE = "Les éléments présentés dans ce document ne constituent pas une vérité absolue ni un diagnostic. Ils s’inscrivent dans une approche imaginative et métaphorique, s’appuyant sur le symbolisme des cartes créatives de Lise Bartoli, et ont pour vocation d’ouvrir un espace de réflexion pouvant favoriser une meilleure compréhension de soi et de ses émotions.";
+  var RESERVE = "Les \u00e9l\u00e9ments pr\u00e9sent\u00e9s dans ce document ne constituent pas une v\u00e9rit\u00e9 absolue ni un diagnostic. Ils s\u2019inscrivent dans une approche imaginative et m\u00e9taphorique, s\u2019appuyant sur le symbolisme des cartes cr\u00e9atives de Lise Bartoli, et ont pour vocation d\u2019ouvrir un espace de r\u00e9flexion pouvant favoriser une meilleure compr\u00e9hension de soi et de ses \u00e9motions.";
 
-  const parts = [];
-  parts.push("Tu es un professionnel de l’accompagnement à la parentalité et de la psychologie narrative pour enfants. Tu maîttrises la création de documents Word structurés et bien présentés via la bibliothèque Python docx.");
+  var parts = [];
+  parts.push("Tu es un professionnel de l\u2019accompagnement \u00e0 la parentalit\u00e9 et de la psychologie narrative pour enfants. Tu ma\u00eettrises la cr\u00e9ation de documents Word structur\u00e9s et bien pr\u00e9sent\u00e9s via la biblioth\u00e8que Python docx.");
   parts.push("");
-  parts.push("Voici le tirage effectué avec les Cartes créatives de Lise Bartoli. Pour chaque carte, tu as sa catégorie, son nom, ses mots-clés (ou enseignement / pouvoir), sa symbolique et son interprétation telles que décrites par Lise Bartoli.");
+  parts.push("Voici le tirage effectu\u00e9 avec les Cartes cr\u00e9atives de Lise Bartoli. Pour chaque carte, tu as sa cat\u00e9gorie, son nom, ses mots-cl\u00e9s (ou enseignement / pouvoir), sa symbolique et son interpr\u00e9tation telles que d\u00e9crites par Lise Bartoli.");
   parts.push("");
-  parts.push("════════ TIRAGE ════════");
+  parts.push("=== TIRAGE ===");
 
-  DATA.themes.forEach(theme => {
-    const indices = [...selection[theme.id]];
+  DATA.themes.forEach(function(theme) {
+    var indices = Array.from(selection[theme.id]);
     if (!indices.length) return;
     parts.push("");
-    parts.push("── " + theme.label.toUpperCase() + " ──");
-    indices.forEach(i => {
-      const c = theme.cartes[i];
+    parts.push("-- " + theme.label.toUpperCase() + " --");
+    indices.forEach(function(i) {
+      var c = theme.cartes[i];
       parts.push("");
       parts.push("Carte : " + c.nom);
-      if (c.mots_cles) parts.push("Mots-clés : " + c.mots_cles);
+      if (c.mots_cles) parts.push("Mots-cl\u00e9s : " + c.mots_cles);
       if (c.enseignement) parts.push("Enseignement : " + c.enseignement);
       if (c.pouvoir) parts.push("Pouvoir : " + c.pouvoir);
-      if (c.symbolique) parts.push("Symbolique : " + c.symbolique.replace(/\s*
-\s*/g, " "));
-      if (c.interpretation) parts.push("Interprétation : " + c.interpretation.replace(/\s*
-\s*/g, " "));
+      if (c.symbolique) parts.push("Symbolique : " + c.symbolique.replace(/\s+/g, " "));
+      if (c.interpretation) parts.push("Interpr\u00e9tation : " + c.interpretation.replace(/\s+/g, " "));
     });
   });
 
   parts.push("");
-  parts.push("════════ DOCUMENT À CRÉER ════════");
+  parts.push("=== DOCUMENT A CREER ===");
   parts.push("");
-  parts.push("Crée un document Word (fichier .docx) pédagogique, chaleureux et bien structuré, destiné aux parents et/ou à l’enfant. Le document doit comporter les sections suivantes :");
+  parts.push("Cr\u00e9e un document Word (.docx) p\u00e9dagogique, chaleureux et bien structur\u00e9, destin\u00e9 aux parents et/ou \u00e0 l\u2019enfant. Le document doit comporter les sections suivantes :");
   parts.push("");
-  parts.push("1. **Page de titre** : un titre évoca­teur (ex. « Mon tirage de cartes » ou similaire), la date du jour, et une mise en page soignée.");
+  parts.push("1. PAGE DE TITRE : un titre \u00e9vocateur (ex. \"Mon tirage de cartes\" ou similaire), la date du jour, mise en page soign\u00e9e.");
   parts.push("");
-  parts.push("2. **Réserve d’interprétation** (encadré ou en italique, en introduction) :");
-  parts.push("   "" + RESERVE + """);
+  parts.push("2. RESERVE D\u2019INTERPRETATION (encadr\u00e9 ou en italique, en introduction) :");
+  parts.push("   " + RESERVE);
   parts.push("");
-  parts.push("3. **Les cartes tirées** : pour chaque carte, une section avec :");
-  parts.push("   - Son nom et sa catégorie (Héros / Problème du héros / Allié / Objet magique)");
-  parts.push("   - Ses mots-clés / enseignement / pouvoir");
-  parts.push("   - Sa symbolique et son interprétation (en langage accessible, adapté à une lecture parent-enfant)");
+  parts.push("3. LES CARTES TIREES : pour chaque carte :");
+  parts.push("   - Son nom et sa cat\u00e9gorie (H\u00e9ros / Probl\u00e8me du h\u00e9ros / Alli\u00e9 / Objet magique)");
+  parts.push("   - Ses mots-cl\u00e9s / enseignement / pouvoir");
+  parts.push("   - Sa symbolique et son interpr\u00e9tation en langage accessible, adapt\u00e9 \u00e0 une lecture parent-enfant");
   parts.push("");
-  parts.push("4. **Le conte symbolique** : un récit court (15 à 25 phrases) intégrant naturellement toutes les cartes tirées, à lire à voix haute. Ton accessible et bienveillant. Dénouement positif et apaisant.");
+  parts.push("4. LE CONTE SYMBOLIQUE : un r\u00e9cit court (15 \u00e0 25 phrases) int\u00e9grant naturellement toutes les cartes tir\u00e9es, \u00e0 lire \u00e0 voix haute. Ton accessible et bienveillant. D\u00e9nouement positif et apaisant.");
   parts.push("");
-  parts.push("5. **Questions pour partager ensemble** : 4 à 5 questions douces et ouvertes que le parent peut poser à l’enfant après la lecture, pour favoriser l’expression émotionnelle. Ex. : « Quel personnage tu préfères ? Pourquoi ? »");
+  parts.push("5. QUESTIONS POUR PARTAGER ENSEMBLE : 4 \u00e0 5 questions douces et ouvertes que le parent peut poser \u00e0 l\u2019enfant apr\u00e8s la lecture, pour favoriser l\u2019expression \u00e9motionnelle.");
   parts.push("");
-  parts.push("6. **Message de clôture** : un court paragraphe d’encouragement adressé à l’enfant (et/ou au parent), valorisant ses ressources intérieures.");
+  parts.push("6. MESSAGE DE CLOTURE : un court paragraphe d\u2019encouragement adress\u00e9 \u00e0 l\u2019enfant (et/ou au parent), valorisant ses ressources int\u00e9rieures.");
   parts.push("");
-  parts.push("Mise en forme : utilise des titres hiérarchisés (Heading 1, Heading 2), des couleurs douces et harmonieuses, des espaces aérés. Le document doit être imprimable et agréable à lire pour un enfant et son parent.");
+  parts.push("MISE EN FORME : titres hi\u00e9rarchis\u00e9s (Heading 1, Heading 2), couleurs douces, espaces a\u00e9r\u00e9s, imprimable et agr\u00e9able pour un enfant et son parent.");
   parts.push("");
-  parts.push("Génère le code Python complet utilisant la bibliothèque `docx` (python-docx) pour créer ce fichier. Le fichier de sortie s’appellera `tirage_bartoli.docx`.");
-  return parts.join("
-");
+  parts.push("G\u00e9n\u00e8re le code Python complet utilisant la biblioth\u00e8que python-docx pour cr\u00e9er ce fichier. Le fichier de sortie s\u2019appellera tirage_bartoli.docx.");
+  return parts.join("\n");
 }
 
 document.getElementById("gen").onclick = () => {
@@ -571,26 +570,28 @@ function showToast(msg){
 }
 
 
-document.getElementById("gen-word").onclick = () => {
-  const total = Object.values(selection).reduce((s, set) => s + set.size, 0);
-  if (total === 0) { showToast("Sélectionne au moins une carte."); return; }
+
+
+document.getElementById("gen-word").onclick = function() {
+  var total = Object.values(selection).reduce(function(s, set) { return s + set.size; }, 0);
+  if (total === 0) { showToast("S\u00e9lectionne au moins une carte."); return; }
   document.getElementById("prompt-word").textContent = buildWordPrompt();
   document.getElementById("prompt-word-wrap").style.display = "block";
   document.getElementById("copy-word").disabled = false;
 };
 
-document.getElementById("copy-word").onclick = async () => {
+document.getElementById("copy-word").onclick = async function() {
   try {
     await navigator.clipboard.writeText(document.getElementById("prompt-word").textContent);
-    showToast("Copié dans le presse-papiers");
-  } catch (e) {
-    const r = document.createRange();
+    showToast("Copi\u00e9 dans le presse-papiers");
+  } catch(e) {
+    var r = document.createRange();
     r.selectNode(document.getElementById("prompt-word"));
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(r);
     document.execCommand("copy");
     window.getSelection().removeAllRanges();
-    showToast("Copié dans le presse-papiers");
+    showToast("Copi\u00e9 dans le presse-papiers");
   }
 };
 
