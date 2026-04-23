@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartes Créatives de Lise Bartoli</title>
+<style>
+  :root {
+    --bg: #f5f1e8;
+    --bg2: #ebe3d1;
+    --ink: #2b2119;
+    --muted: #6b5d4d;
+    --accent: #8b2d3a;
+    --accent-2: #c8a267;
+    --card-bg: #fffdf8;
+    --shadow: 0 2px 6px rgba(0,0,0,.08), 0 8px 24px rgba(43,33,25,.07);
+    --radius: 10px;
+    --heros: #c8a267;
+    --probleme: #a65a47;
+    --allie: #7a9b76;
+    --objet: #6f85a3;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Georgia", "Garamond", serif;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%) fixed;
+    color: var(--ink);
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  header {
+    padding: 28px 24px 18px;
+    text-align: center;
+    border-bottom: 1px solid rgba(139,45,58,.15);
+    background: rgba(255,253,248,.5);
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    letter-spacing: .5px;
+    color: var(--accent);
+  }
+  .subtitle {
+    margin: 0;
+    font-style: italic;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 960px) {
+    main { grid-template-columns: 1fr; }
+  }
+  .theme {
+    margin-bottom: 22px;
+    padding: 18px 16px 14px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border-left: 6px solid var(--theme-color, var(--accent));
+  }
+  .theme h2 {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+    color: var(--theme-color, var(--accent));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theme-count {
+    font-size: .8rem;
+    background: var(--theme-color, var(--accent));
+    color: #fff;
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-family: system-ui, sans-serif;
+  }
+  .theme-hint {
+    font-size: .82rem;
+    color: var(--muted);
+    margin: 4px 0 12px;
+    font-style: italic;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    gap: 8px;
+  }
+  .card {
+    cursor: pointer;
+    background: #fff;
+    border: 2px solid rgba(43,33,25,.1);
+    border-radius: 8px;
+    padding: 10px 10px 9px;
+    text-align: center;
+    transition: all .15s ease;
+    user-select: none;
+    font-size: .88rem;
+  }
+  .card:hover {
+    border-color: var(--theme-color, var(--accent));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,.08);
+  }
+  .card.selected {
+    background: var(--theme-color, var(--accent));
+    color: #fff;
+    border-color: var(--theme-color, var(--accent));
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+  }
+  .card-name { font-weight: 600; }
+  .card-keys {
+    display: block;
+    font-size: .72rem;
+    font-style: italic;
+    margin-top: 3px;
+    opacity: .75;
+  }
+  /* Panneau de droite */
+  aside {
+    position: sticky;
+    top: 14px;
+    align-self: start;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+  }
+  @media (max-width: 960px) {
+    aside { position: static; max-height: none; }
+  }
+  .panel {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 16px 14px;
+    margin-bottom: 18px;
+  }
+  .panel h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(139,45,58,.15);
+    padding-bottom: 6px;
+  }
+  .empty {
+    color: var(--muted);
+    font-style: italic;
+    font-size: .9rem;
+  }
+  .selected-card {
+    border-left: 4px solid var(--theme-color, var(--accent));
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    background: #fafaf5;
+    border-radius: 0 6px 6px 0;
+  }
+  .selected-card .sc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .selected-card .sc-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--theme-color, var(--accent));
+  }
+  .selected-card .sc-theme {
+    font-size: .7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-family: system-ui, sans-serif;
+  }
+  .selected-card .sc-keys {
+    font-style: italic;
+    font-size: .85rem;
+    color: var(--muted);
+    margin: 3px 0 6px;
+  }
+  .selected-card details {
+    margin-top: 6px;
+    font-size: .88rem;
+  }
+  .selected-card summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--muted);
+    font-size: .82rem;
+    padding: 2px 0;
+  }
+  .selected-card details p {
+    margin: 4px 0;
+  }
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 14px;
+    font-family: inherit;
+    font-size: .92rem;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  button:hover { background: #6f242e; }
+  button.secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--muted);
+  }
+  button.secondary:hover {
+    background: var(--muted);
+    color: #fff;
+  }
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .prompt-box {
+    font-family: "Consolas", "Monaco", monospace;
+    font-size: .8rem;
+    background: #fdf9ed;
+    border: 1px solid rgba(200, 162, 103, .4);
+    border-radius: 6px;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 340px;
+    overflow-y: auto;
+    color: #3a2e20;
+  }
+  .toast {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity .3s ease;
+    pointer-events: none;
+    font-size: .9rem;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; }
+  footer {
+    text-align: center;
+    padding: 16px;
+    color: var(--muted);
+    font-size: .82rem;
+    font-style: italic;
+  }
+  .actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .counter {
+    font-size: .9rem;
+    color: var(--muted);
+  }
+  .counter strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cartes Créatives — Lise Bartoli</h1>
+  <p class="subtitle">Tirez vos cartes, découvrez leurs symboliques, préparez une lecture globale.</p>
+</header>
+
+<main>
+  <section id="themes"></section>
+
+  <aside>
+    <div class="panel">
+      <div class="actions-bar">
+        <div class="counter">Cartes tirées&nbsp;: <strong id="total">0</strong></div>
+        <button class="secondary" id="reset">Réinitialiser</button>
+      </div>
+      <div id="selected-list"><p class="empty">Cliquez sur les cartes ci-contre pour composer votre tirage.</p></div>
+    </div>
+
+    <div class="panel">
+      <h3>Synthèse &amp; prompt</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin:0 0 8px">
+        Génère un prompt prêt à coller dans Claude pour une interprétation globale et un conte symbolique.
+      </p>
+      <div class="btn-row">
+        <button id="gen">Générer le prompt</button>
+        <button class="secondary" id="copy" disabled>Copier</button>
+      </div>
+      <div id="prompt-wrap" style="margin-top:10px;display:none">
+        <div class="prompt-box" id="prompt"></div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<div class="toast" id="toast">Copié dans le presse-papiers</div>
+
+<footer>D'après le livret d'accompagnement des <em>Cartes créatives</em> de Lise Bartoli.</footer>
+
+<script>
+const DATA = {"intro": {}, "themes": [{"id": "heros", "label": "Héros", "description": "Ces cartes représentent l'archétype qui va prendre sur lui la majeure partie de la problématique (même si elle n'est pas conscientisée par l'enfant). Le terme « héros » doit être pris dans les sens de personnage central de la fiction. Bien que freiné par une difficulté, son nom générique le place dans une dynamique de réussite. On pressent qu'il porte des valeurs de courage, de dépassement de soi qui lui permettront de surmonter les obstacles posés sur son chemin de vie. Le genre sexuel des archétypes n'intervient pas. L'enfant pourra s'identifier à la Princesse ou au Chevalier par exemple, quel que soit son sexe. Comme dans les contes traditionnels lorsque les garçons appréhendent les malheurs subis par Cendrillon ou que les filles ressentent la frénésie de Peter Pan… Le personnage fictif révèle plutôt la part féminine ou masculine qui existe en chacun de nous. Il faut laisser le temps à l'enfant « d'entrer » dans le personnage. Les petits parviennent facilement à accéder à une scène imaginaire. Toutefois, vous pouvez l'aider à concrétiser son héros en l'incitant à le rendre plus précis. Par exemple, vous pouvez lui poser des questions concernant son aspect physique (sa position, ses vêtements, ce qu'il est en train de faire, etc.). Petit à petit, le héros prend chair. Prenez également un moment pour le faire parler du décor : est-ce à l'intérieur ? dans un château, une maison, une hutte ? S'il est à l'extérieur, est-ce une prairie, une montagne, une plage ? Est-il seul ou pas ? Une première caractéristique est donnée par le titre de la carte tirée. La Princesse a un statut bien différent du Vagabond par exemple. Ils ne sont pas du même milieu. Pourtant, l'un comme l'autre peuvent vivre des aventures malheureuses et devoir se dépasser pour se sentir mieux. Ils peuvent même être des anti-héros au départ mais finir par devenir de véritables héros au cours de l'évolution de l'histoire.", "cartes": [{"nom": "La Bergère", "mots_cles": "Ancrage - Rêverie - Communauté", "enseignement": "", "pouvoir": "", "symbolique": "Telle une sentinelle, la Bergère veille sur son troupeau et le protège des autres prédateurs. Douce et humble, elle sait comment rappeler les brebis égarées. On la représente souvent entourée de ses moutons, un bâton lui permettant d'avancer avec assurance sur les chemins escarpés. Libre, ses seules attaches sont la terre et son troupeau. Nul maître pour lui dicter ce qu'elle doit faire. Elle médite et observe les étoiles. Pourtant elle peut se sentir bien seule dans son pâturage. On peut imaginer qu'un jour elle ait envie d'être accompagnée.", "interpretation": "Cette carte évoque la nécessité d'alterner les moments de rêverie et d'ancrage. L'enfant qui est souvent dans la lune enrichit son univers intérieur. Lorsqu'il a les pieds sur terre il peut alors acter ce qu'il a imaginé et grandir de façon équilibrée. La Bergère rappelle que le petit aime quand toute la famille est rassemblée. Il a besoin de se sentir en sécurité au sein d'un foyer paisible."}, {"nom": "La Biche", "mots_cles": "Sensibilité - Agilité - Instinct", "enseignement": "", "pouvoir": "", "symbolique": "La Biche est dotée d'une formidable sensibilité. Elle représente la douceur, l'innocence, et inspire la tendresse. C'est sans doute pourquoi nombre de mamans donnent ce surnom à leur petite fille. Ses mouvements sont très vifs et elle peut fuir rapidement, se sauver en sautant les obstacles avec une agilité certaine dès qu'un danger arrive. Elle reste d'ailleurs à l'affût de tout ce qui pourrait représenter une menace pour sa vie ou celle des siens car elle a conscience de sa vulnérabilité.", "interpretation": "Cette carte de la Biche représente notre partie féminine, que l'on soit homme ou femme. Elle rappelle que l'enfant possède une force intuitive qu'il est nécessaire d'activer pour mieux se connaître. Il lui est bénéfique de rester à l'écoute des signaux instinctifs qui lui permettent d'agir au bon moment."}, {"nom": "Le Chevalier", "mots_cles": "Fierté - Courage - Détermination", "enseignement": "", "pouvoir": "", "symbolique": "Être nommé Chevalier est une véritable récompense sociale puisque l'adoubement est réalisé par un seigneur ou par le roi. Cette cérémonie certifie que le guerrier a su franchir toutes les étapes nécessaires pour entrer dans la communauté honorifique de l'ordre des chevaliers et qu'il détient les qualités fondamentales de force, de courage, de solidarité et de loyauté. Il poursuit ensuite les missions qui lui sont confiées, accompagné de ses deux fidèles compagnons : son épée et son cheval.", "interpretation": "Cette carte du Chevalier représente le passage initiatique de l'enfant vers le cercle envié de ceux qui ont l'âge de raison. Pour y parvenir, le petit traverse plusieurs expériences qui lui permettent de maîtriser ses émotions, tel le guerrier dominant son cheval. Il prouve qu'il est prêt à affronter les dangers de la vie avec bravoure et discernement."}, {"nom": "La Danseuse", "mots_cles": "Légèreté - Persévérance - Harmonie", "enseignement": "", "pouvoir": "", "symbolique": "Cet archétype, qu'il soit danseur ou danseuse, symbolise toujours la grâce et la souplesse. La Danseuse doit endurer des heures d'entraînement afin de réussir à franchir toutes les étapes de la maîtrise corporelle. Son art culmine lorsqu'elle défie la pesanteur et s'élève dans les airs, tel un oiseau d'une légèreté infinie, débarrassée de toute lourdeur. Capable d'être à la fois reliée à la terre et au ciel, elle représente l'harmonie entre le corps et l'esprit.", "interpretation": "La carte de la Danseuse nous rappelle qu'il faut parfois endurer des moments difficiles pour atteindre un but. Elle incite l'enfant à exprimer ses émotions avec son corps et interroge sa place parmi les autres. Peut-il danser harmonieusement et avec plaisir dans la troupe qui l'entoure ou fait-il cavalier seul ?"}, {"nom": "La Marchande", "mots_cles": "Équilibre - Attention - Concrétisation", "enseignement": "", "pouvoir": "", "symbolique": "La Marchande a la capacité d'estimer sa marchandise instinctivement. Elle connaît la provenance de ses articles et sait ce qu'il a fallu comme travail à l'agriculteur pour obtenir de savoureux fruits et légumes. Elle étudie le moment favorable pour faire ses achats en fonction des saisons et vérifie que ses comptes sont bien équilibrés. Une fois que tout est en place, elle met toute son énergie pour attirer la clientèle sur son stand dans le but de lui transmettre sa connaissance de chaque produit.", "interpretation": "Cette carte reconnecte l'enfant à l'univers matériel lorsqu'il n'arrive pas à rester attentif ou quand il imagine qu'il pourrait tout obtenir rapidement. La Marchande lui rappelle qu'il ne peut aboutir à ce qu'il souhaite que lorsqu'il a bien préparé le terrain et élaboré une stratégie. Alors le temps de la réalisation concrète arrive."}, {"nom": "La Marionnette", "mots_cles": "Désir - Influence - Consigne", "enseignement": "", "pouvoir": "", "symbolique": "Au repos, la Marionnette rappelle le doudou, cet objet transitionnel que l'enfant serre dans ses bras pour se rassurer. Mais dès qu'on la manipule, elle prend vie, à l'instar d'un Guignol ou d'un Pinocchio, pour devenir un personnage phare. Les enfants ne font pas de distinction entre animé et inanimé. Ils ont l'habitude de parler à leur poupée par exemple et de la traiter comme un être vivant. Elle devient alors le jouet de leur imagination et exprime ce qu'ils souhaitent lui faire vivre ou dire.", "interpretation": "Cette carte représente la part de l'enfant qui est soumise aux conditionnements des parents et aux injonctions des adultes ou qui est sous l'influence d'un ami. Rester dans le désir de ce que souhaitent les plus grands peut sembler frustrant pour l'enfant qui aimerait être reconnu comme une personne à part entière. Toutefois, quand le petit devient maître de la Marionnette, il renverse les rôles et parvient à passer de l'état de spectateur à celui d'acteur."}, {"nom": "Petit Ours", "mots_cles": "Force - Tendresse - Réflexion", "enseignement": "", "pouvoir": "", "symbolique": "Petit Ours est un animal qui inspire tendresse et respect. Tendresse car il rappelle la douceur du pelage du nounours contre lequel l'enfant s'endort pour se sentir en sécurité et protégé. Respect car, on le sait, l'ours est fort, voire brutal, et sait agir quand il le faut. Il grogne, montre les crocs et parvient à faire fuir ses ennemis. Par ailleurs, il y a un temps de mise en veille en phase avec le cycle des saisons lorsque l'ours hiberne. Il se retire du monde pour mieux resurgir quand la nature s'éveille.", "interpretation": "Cette carte exprime la part masculine et instinctive de l'enfant. Elle rappelle qu'il détient assez de courage et de confiance en lui pour faire face aux événements, prendre les bonnes décisions et s'affirmer. Elle évoque également que les temps de réflexion intérieure sont positifs puisqu'ils permettent de réveiller des capacités endormies."}, {"nom": "Le Pirate", "mots_cles": "Impulsivité - Opposition - Exploration", "enseignement": "", "pouvoir": "", "symbolique": "Grand navigateur avant tout, le Pirate sait gouverner son bateau. Il connaît les jours de grand vent et de houle mais n'a pas peur de braver la tempête. Fougueux, il encourage bruyamment son équipage à l'approche d'une attaque. Souvent considéré comme un marin rebelle et indépendant, à l'image de Jack Sparrow des Pirates des Caraïbes, il symbolise la transgression. Rusé, audacieux et parfois menteur, il refuse toute autorité. N'obéissant pas aux règles sociales, il fait acte d'intimidation et cherche à imposer sa loi auprès de son équipage et de ses ennemis afin d'atteindre son but : trouver le trésor perdu.", "interpretation": "Le Pirate représente les pulsions inconscientes que l'enfant ne parvient pas à contenir. Il est obligé de suivre les consignes qu'on lui donne alors qu'il rêve d'un monde sans règle où il serait maître et pourrait obtenir tout ce qu'il voudrait. Pour suivre le bon chemin, il lui faudra décoder la carte qui le guidera vers la connaissance enfouie au fond de lui."}, {"nom": "Le Prince", "mots_cles": "Domination - Respect - Charme", "enseignement": "", "pouvoir": "", "symbolique": "Le Prince est porté par un destin supérieur puisqu'il est appelé à devenir roi, le sommet de la hiérarchie humaine. Ce statut envié et jalousé l'oblige à s'entourer des bonnes personnes tout en se méfiant des éventuels ennemis. L'inconscient collectif véhicule deux images opposées. Le versant lumineux est le Prince charmant, homme idéal d'une grande bonté, responsable, brave et courageux. Sa part d'ombre est le petit chef autoritaire, abusant de son statut pour obtenir tout ce qu'il veut.", "interpretation": "Cette carte représente le désir de détenir le pouvoir, de dominer. L'enfant doit respecter l'adulte et souhaite en retour être écouté pour s'affirmer. Il rêve de porter la couronne, c'est-à-dire de grandir, de devenir fort comme les grands et de s'émanciper. Dans la vie de tous les jours, il cherche à être compris pour prendre sa place tout en s'entourant d'amis de confiance à qui il pourra se mesurer."}, {"nom": "La Princesse", "mots_cles": "Séduction - Attente - Accomplissement", "enseignement": "", "pouvoir": "", "symbolique": "La Princesse est dotée de tous les atouts imaginables pour être heureuse. Elle possède la jeunesse, le pouvoir, l'argent et une vie aisée au sein de son château. Ce monde fermé qui peut sembler rassurant car sécurisé limite toutefois sa liberté et la réduit à l'attente du Prince charmant qui lui permettra d'accomplir son rôle de souveraine. Sa place est jalousée et elle devra s'affirmer pour se réaliser et dévoiler sa véritable richesse : la beauté intérieure.", "interpretation": "La carte de la Princesse exprime le désir de l'enfant d'être reconnu et aimé pour ce qu'il est vraiment. Soumis à la volonté de ses parents, le petit a parfois la sensation d'être prisonnier. Toutefois, cette part de lui sait que son destin est en marche. Elle sait que le moment viendra de déployer le formidable potentiel qui lui permettra de trouver sa véritable identité au sein de sa famille et de son groupe d'amis."}, {"nom": "Le Soldat", "mots_cles": "Combat - Désaccord - Défense", "enseignement": "", "pouvoir": "", "symbolique": "L'image du Soldat est évidemment liée à la guerre et à la protection d'un territoire. Son rôle est celui de combattre sans cesse jusqu'à la victoire. Puisque les ordres viennent toujours d'un supérieur, il lui faut parfois attendre à l'abri sans bouger avant de recevoir le signal d'attaquer. Lorsque la lutte tourne mal, il se sent terriblement impuissant et coupable. Par lassitude ou par désaccord, il lui arrive de déserter afin de vivre en paix.", "interpretation": "La carte du Soldat représente le conflit intérieur que vit l'enfant lorsqu'il doit intégrer des avis contraires. C'est le cas si ses parents se disputent ou ne sont pas d'accord sur un sujet qui le concerne. Il sait qu'il doit obéir et laisser « les grands » prendre les décisions, mais il doit aussi batailler pour faire ce qu'il pense être bon pour lui tout en souhaitant pouvoir gagner le cœur de chacun."}, {"nom": "Le Vagabond", "mots_cles": "Indépendance - Insouciance - Solitude", "enseignement": "", "pouvoir": "", "symbolique": "Le Vagabond vadrouille sur le chemin, ne portant comme bagage qu'un petit baluchon. Il possède une facette sombre : celle de l'incompris qui a été rejeté ou qui a préféré partir, pensant qu'il trouverait des personnes plus compréhensives sur sa route. Il erre sans trop savoir où aller. Il cherche sa voie. Son versant positif dévoile un aventurier épris de liberté dont le désir est de vivre le plus légèrement possible, débarrassé de toute contrainte. Il savoure chaque instant sans se préoccuper du passé ni du futur.", "interpretation": "La carte du Vagabond exprime l'ambivalence qui se joue lorsqu'il s'agit de prendre les bonnes décisions tout seul. L'enfant a envie de découvrir de nouveaux territoires et d'être indépendant pour suivre la route qu'il ambitionne. Idéaliste et rêveur, il imagine qu'il peut arriver à se libérer du carcan familial. Toutefois, il a peur d'être incompris et de s'engager sur une voie qui l'éloignerait des gens qu'il aime."}, {"nom": "Le Jardinier", "mots_cles": "Ancrage - Humilité - Instinct", "enseignement": "", "pouvoir": "", "symbolique": "En lien avec la terre, le jardinier est obligé de suivre Dame nature, maîtresse du climat et des intempéries, ce qui invite à une forme d'humilité. Il sait qu'il faut respecter les saisons car il y a un moment pour chaque tâche : semer, planter, bêcher, désherber... Et, même si parfois les difficultés s'amoncellent, il profite finalement d'un jardin joliment fleuri ou d'un potager gorgé de savoureux fruits et légumes.", "interpretation": "Cette carte réveille le potentiel instinctif de l'enfant. S'il souhaite réaliser ses désirs, il doit concevoir à l'avance un plan pour organiser son terrain d'action tout en laissant aux nouveautés le temps d'éclore. Le Jardinier invite l'enfant à avancer à son rythme, sans se laisser écraser par les épreuves qu'il peut rencontrer. Il enseigne au petit qu'il gagne à puiser de la force dans son environnement extérieur afin de cultiver ses ressources et prendre plaisir à les partager avec ceux qu'il aime."}, {"nom": "La Vétérinaire", "mots_cles": "Assistance - Empathie - Observation", "enseignement": "", "pouvoir": "", "symbolique": "La Vétérinaire est réputée pour comprendre ce qui fait mal et trouver le remède qui permettra d'aller mieux. C'est un métier-passion : ce médecin aime les animaux dont elle doit s'occuper et maintient une attention vigilante pour affiner son diagnostic. Elle possède aussi les qualités humaines nécessaires afin de dépister un dysfonctionnement dans les relations entre un animal et son propriétaire. Elle a donc une faculté d'observation qui lui permet de conseiller de meilleurs comportements.", "interpretation": "On le sait, les enfants adorent les animaux. Nombre d'entre eux rêvent de pouvoir en prendre soin. La Vétérinaire fait appel à leur désir d'aider et d'apaiser. En imaginant apporter du bien-être à l'animal, l'enfant développe son empathie et comble son besoin affectif. Ce tranquillisant soulage les petits stressés tout autant que ceux qui ressentent des conflits dans leur entourage."}]}, {"id": "probleme", "label": "Problème du héros", "description": "Ces cartes représentent la difficulté de l'enfant. Il faut garder en mémoire que c'est le personnage fictif qui vit le problème, pas le petit. Inutile de lui rappeler la nature de ses inquiétudes. C'est son inconscient qui le dirigera « par hasard » vers la carte qui lui correspond. Cette phase du jeu permet à l'enfant de mieux ressentir le personnage et d'entrer en résonance avec son héros/héroïne, qui, comme lui, connaît ou a connu une émotion difficile ou un blocage. Les nuances émotionnelles des quatorze cartes sont celles que chaque enfant peut expérimenter le plus couramment dans la vie réelle. Une fois la carte tirée (par exemple : « Il n'y arrivera pas » ou « On se moque de lui »), l'enfant élabore rapidement sa fiction tout seul. S'il est en panne, l'adulte peut l'aider à mieux se connecter au problème du personnage en posant des questions vagues : Qu'est-ce que la Princesse n'ose pas faire ? Depuis quand ? Pourquoi se moque-t-on du Pirate ? Qui se moque de lui ? On ne parle toujours que du personnage, pas de l'enfant. Si l'enfant projette sur son personnage un contenu émotionnel différent de la carte qu'il a tirée, laissez faire. C'est que son inconscient le pousse à rejouer une situation qui lui a fait de la peine ou qui l'a marqué et dont il a besoin de se délivrer. Accompagnez-le dans sa réflexion. Vous pouvez lui demander à la fin ce que lui suggère l'émotion ou la situation de son héros. Par projection, l'enfant s'autorisera inconsciemment à vous dévoiler une part de lui qui était restée dans l'ombre. Pouvoir mettre au grand jour cette facette cachée et en parler, même et surtout si c'est par l'intermédiaire d'un personnage fictif, le sécurise. Cet « autre moi » me ressemble : il vit les mêmes choses que moi. Je ne suis donc pas seul à vivre cette difficulté et on peut en parler, puis trouver une solution. En revanche, abstenez-vous de donner votre interprétation.", "cartes": [{"nom": "Il a peur", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "La peur est un signal qui répond à une situation perçue comme dangereuse ou inquiétante. Cette émotion est courante chez les enfants dont l'imaginaire fertile amplifie les craintes. Les frayeurs des petits peuvent sembler futiles aux adultes. Pourtant, les sensations qu'ils vivent sont bien réelles. Dépasser ces appréhensions est nécessaire à leur développement. Une fois surmontées, elles permettent de renforcer leur assurance.", "interpretation": "Cette carte signifie que l'enfant se sent actuellement impuissant à maîtriser une peur. S'il a entre 3 et 6 ans, il peut s'agir de peur du noir, des monstres ou des fantômes. S'il est un peu plus grand, il est possible qu'il craigne de se retrouver seul, de se perdre, de rater un devoir ou d'être rejeté par ses copains. L'émotion identifiée est proche de ce qu'il ressent. Mais comme c'est le héros qui la vit, il sera plus facile pour l'enfant de l'exprimer pour s'en détacher. L'histoire symbolique l'aidera à affaiblir l'émotion pour mieux l'affronter."}, {"nom": "Il est déçu", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "La déception provient d'une attente non satisfaite. On peut être déçu par un proche si on pensait recevoir une récompense qui ne vient pas, par exemple. Ou être mécontent de son propre comportement lorsqu'on pensait pouvoir réussir un tournant qu'on a raté. Cette désillusion est le plus souvent associée à la tristesse ou la colère.", "interpretation": "Cette carte signifie que l'enfant se sent blessé par une promesse non tenue. Les raisons peuvent être nombreuses : une sortie méritée qui a été oubliée, un cadeau remplacé par un autre, un copain qui ne vient pas à la fête d'anniversaire, etc. Le petit vit une réalité différente de ce qu'il espérait. Il a fait confiance et se sent trahi. L'histoire inventée dans laquelle il rejoue cette souffrance affective permettra à l'enfant de restaurer la paix et de faire à nouveau confiance plutôt que de se méfier des autres."}, {"nom": "Il est en colère", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "La colère est une réaction émotionnelle face à un obstacle qui n'a pu être franchi. Cette irritation a une conséquence positive puisqu'elle permet de fournir l'énergie nécessaire pour dépasser l'épreuve et évacuer la tension. Toutefois, lorsqu'elle est récurrente, elle nuit au bien-être. Parfois, l'énervement est gardé à l'intérieur de soi, il s'accumule et risque d'éclater plus tard, quand on ne s'y attend pas, de façon plus agressive.", "interpretation": "Cette carte signifie que l'enfant ne s'est pas senti compris. Il souhaite être entendu et lutte pour montrer qu'il existe. Il est possible qu'il ait du mal à gérer les frustrations car il imagine que si on l'empêche de faire quelque chose, c'est qu'on ne l'aime pas. Le conte symbolique lui permettra d'exprimer cette sensation afin de trouver une stratégie pour retrouver le calme intérieur."}, {"nom": "Il est stressé", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "La pression est utile pour régler les aléas de la vie quotidienne. Elle mobilise l'énergie nécessaire pour trouver une solution et décompresser lorsqu'un conflit intérieur se joue. Mais le stress à répétition ou continuel peut engendrer des tensions psychiques, voire un sentiment d'anxiété.", "interpretation": "Cette carte signifie que l'enfant appréhende une situation : un déménagement, l'arrivée d'un bébé dans la famille, un devoir à rendre, un désaccord avec un copain ou un parent... Il a l'impression qu'il n'est pas prêt à affronter ce moment. Si les adultes attendent des résultats performants en sport, en musique ou à l'école, il peut aussi se mettre la pression pour les satisfaire. Dans certains cas, le petit en arrive même à vouloir tout contrôler pour que tout soit parfait et se faire aimer. L'histoire symbolique lui permettra de relâcher la pression et d'éviter de croire que sa valeur dépend uniquement de ses résultats."}, {"nom": "Il est triste", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "Cette émotion aide à accepter les pertes vécues au quotidien comme lorsque l'enfant se sépare de sa mère. Elle procure un temps de repli sur soi pour intégrer les éloignements. Après le temps des larmes et des tensions, c'est le moment de la réparation afin de repartir pour une nouvelle exploration. Lorsqu'elle est plus profonde, la déprime donne une sensation d'abattement.", "interpretation": "Cette carte indique que l'enfant a besoin d'exprimer un chagrin. C'est peut-être un moment passager car il doit surmonter une difficulté qui lui permet de grandir. Une fois que la peine est comprise, les tensions peuvent être évacuées. Si les pensées négatives et les phrases dévalorisantes sont récurrentes et que la mélancolie s'installe avec des changements chez le petit (il mange moins qu'avant, ne joue plus et s'isole), il est nécessaire de prendre un rendez-vous chez un spécialiste. L'histoire symbolique l'aidera à se blottir contre son allié et à apaiser son cœur pour y puiser la force du renouveau."}, {"nom": "Il fait tout de travers", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "Cette impression provient d'un jugement porté sur une manière de penser ou de se comporter. Elle fait suite à un avis extérieur qui a été intégré comme une vérité. C'est le cas lorsque les adultes critiquent trop souvent les faits et gestes de l'enfant (« Tu as deux mains gauches ! » « Que tu es maladroit ! » « Je vais le faire, ce sera plus rapide ! »). Parfois, c'est le petit qui a une mauvaise opinion de lui-même et qui se dévalorise en imaginant qu'il ne peut pas rivaliser avec les autres qui, selon lui, font toujours mieux.", "interpretation": "Cette carte signifie que l'enfant pense mal faire. Soit il n'arrive pas à suivre correctement les consignes qui lui sont données, soit son juge intérieur est exigeant et il se sent responsable. Il se peut que ce petit manque d'attention. C'est sans doute un rêveur ou un distrait. À force de cumuler les bêtises et les oublis, il s'énerve, ou agace son entourage. Dans tous les cas, l'histoire symbolique lui permettra de mieux se concentrer et de se revaloriser."}, {"nom": "Il n'y arrivera pas", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "L'impression de ne pas parvenir à réaliser ce que l'on souhaite provient d'un événement passé qui a été vécu comme un échec. Se greffe alors la sensation que si on recommence, on échouera à nouveau. Faire des erreurs est naturel. C'est même une étape normale du processus d'apprentissage puisqu'on comprend ainsi ce qu'il ne faut plus faire. Il ne faut toutefois pas rester bloqué sur la défaite.", "interpretation": "Cette carte indique que l'enfant est tiraillé entre l'envie d'avancer et la peur de ne pas pouvoir atteindre le but désiré. Il stagne dans l'attente que les choses changent toutes seules, ce qui engendre une terrible frustration, doublée d'une baisse de l'estime de soi. Il évite les situations qui pourraient le mettre en échec. Ainsi, il ne s'expose pas au jugement de ceux qu'il craint de décevoir. L'histoire symbolique lui permettra de relativiser et de porter sur lui un regard bienveillant."}, {"nom": "Il se sent différent", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "Cette sensation repose sur l'idée que les autres seraient dans la norme, qu'ils seraient mieux que soi, ce qui risque de développer un sentiment de honte. On a l'impression que les autres ne perçoivent que la faiblesse, le petit défaut qui attire le jugement défavorable. Cette attitude influe sur les échanges sociaux.", "interpretation": "Cette carte indique que l'enfant a peur d'être mal jugé. Soit il se met à l'écart, s'imaginant que les autres ne voudront pas jouer avec lui, soit il est sur la défensive, prêt à en découdre pour se faire accepter, ce qui décourage les approches et renforce son isolement. L'histoire qu'il élaborera l'aidera à s'accepter tel qu'il est en tant qu'être unique. Accueillir son originalité lui permettra d'être perçu autrement par les autres."}, {"nom": "C'est injuste !", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "Les enfants ne supportent pas les injustices et traquent les témoignages d'affection afin d'être certains qu'on les aime vraiment. Ce sentiment est actif lorsqu'on leur refuse un jouet ou une sortie. Ils boudent dans leur coin, ou ils éclatent de colère pour manifester leur mécontentement. Ils doivent apprendre à gérer la frustration, étape majeure de leur apprentissage de vie.", "interpretation": "Cette carte indique que l'enfant a du mal à gérer une situation dont il attendait plus de satisfaction. Il a l'impression de ne pas être aimé quand ses désirs ne sont pas comblés. S'il a des frères et sœurs, il est possible qu'il soit jaloux. Il a l'impression qu'on gâte davantage les autres, qu'on passe moins de temps avec lui... À l'école, il trouve que la maîtresse préfère les autres élèves ou que son meilleur copain le délaisse. Il se sent impuissant et en arrive parfois à jouer les victimes pour qu'on s'occupe de lui. L'histoire symbolique lui permettra de sentir qu'il a bien sa place afin de cesser de réclamer l'affection de son entourage."}, {"nom": "On se moque de lui", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "La cour de récréation regorge de moqueries en tout genre. Les enfants rivalisent et cherchent leur place entre dominants et dominés. Ils se défoulent sur ceux qu'ils considèrent comme les plus faibles ou les plus susceptibles. Les quolibets sont adressés à propos du poids, de la couleur de peau, du bégaiement... Même les noms de famille sont écorchés par malice. À force d'être la cible de ces piques, certains se mettent à l'écart du groupe.", "interpretation": "Cette carte indique que l'enfant est fatigué d'essuyer les attaques de ses camarades et qu'il a besoin qu'on entende sa plainte. Il est possible qu'il parvienne tout seul à se défendre. Toutefois, s'il a l'air triste, qu'il fait des cauchemars à répétition ou que ses résultats scolaires baissent, c'est le signe qu'il faut intervenir avant qu'il ne s'isole totalement et devienne un souffre-douleur. L'histoire qu'il va construire lui apprendra qu'un allié puissant l'épaule. Il pourra ainsi s'autoriser à poser des limites claires pour se faire respecter."}, {"nom": "Il n'ose pas", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "Ne pas oser agir trouve sa source dans une blessure narcissique passée qui continue de résonner dans le présent. Les personnes qui n'osent pas sont particulièrement sensibles à l'autorité qui les paralyse et les empêche d'aller de l'avant. Elles préfèrent s'effacer et se faire oublier.", "interpretation": "Cette carte témoigne que l'enfant est timide. Il a peur de prendre une décision et s'en remet aux plus grands. Et quand il faut agir, il imagine le pire résultat. Alors le simple fait de parler en classe ou d'aller au tableau devient une souffrance. Sa crainte provient du fait qu'il a l'impression qu'il sera déprécié s'il rate quelque chose. Il est dommage qu'il ne dise pas ce qu'il a sur le cœur, cela lui permettrait de s'affirmer au lieu d'être dans le désir des autres. L'histoire symbolique lui permettra de prendre de l'assurance afin de devenir acteur de sa vie plutôt que spectateur."}, {"nom": "Personne ne l'aime", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "Cette croyance négative repose sur un manque d'assurance doublé d'une peur de se retrouver seul, comme abandonné. Tout petit, l'enfant compte sur ses parents pour être rassuré. Une fois qu'il se sent sécurisé, il peut explorer son environnement et jouer de façon plus autonome. Lorsque l'enfant pense qu'on ne l'aime pas et l'exprime, c'est pour témoigner qu'il manque de présence, de câlins, d'écoute. Il a soif d'être reconnu et compris. Cela arrive quand des parents sont trop occupés ou qu'ils ne sont pas très démonstratifs.", "interpretation": "Cette carte indique que l'enfant a besoin d'être valorisé. Il a peur de perdre l'affection de ses parents et de se retrouver à l'écart. Il peut ressentir le même malaise, le même sentiment d'abandon, auprès de ses copains (« Personne ne veut jouer avec moi »). En règle générale, les séparations, même de courte durée, sont mal vécues. L'histoire et l'allié lui permettront de se sentir soutenu et valorisé pour être plus sécurisé au niveau affectif."}, {"nom": "Il est étonné", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "L'étonnement fait suite à un événement qui surprend et qui questionne. Il découle obligatoirement d'une situation inattendue, qui frappe la conscience. L'émotion peut être ressentie comme une simple stupéfaction, mais elle peut parfois être plus intense selon ce qui a été vécu.", "interpretation": "L'enfant s'interroge sur un événement imprévu qui l'a déstabilisé. Cela peut être une nouvelle situation familiale qui n'a pas été expliquée ou une punition mal interprétée, par exemple. Lorsqu'un fait a été mal anticipé ou occulté, le petit arrive parfois à imaginer qu'il a été trahi ou qu'on l'aime moins. Il risque alors de forger la croyance stressante qu'il subira d'autres perturbations, puisque rien n'est prévisible. L'histoire symbolique lui permettra d'exprimer une émotion qu'il n'a pas conscientisée et d'apprendre à faire face aux mauvaises surprises."}, {"nom": "Il est jaloux", "mots_cles": "", "enseignement": "", "pouvoir": "", "symbolique": "La jalousie consiste à envier une personne supposée détenir une qualité ou un statut qui lui donnerait plus de valeur. Grande est la peur de se sentir dévalorisé, moins aimé, voire abandonné. C'est une émotion naturelle qui prend racine dans la petite enfance lorsque l'un des parents se tourne vers un autre enfant, un nouveau travail, un autre partenaire... Le bébé a besoin de capter toute l'attention de ses parents pour se sentir aimé. Sinon, il ressent une insécurité affective qui marque son inconscient, et le doute de ne pas être « aimable » s'ancre alors dans son esprit.", "interpretation": "Dès la tendre enfance, le petit perçoit que ses parents ont d'autres sources d'intérêt. Il reste alors à l'affût de ce qui menacerait sa stabilité affective par peur de perdre leur amour. S'ajoute une dose de culpabilité si l'enfant est grondé après avoir exprimé sa jalousie, ce sentiment étant souvent considéré comme négatif. Le conte métaphorique permettra au petit d'être compris par son « allié » et de panser sa blessure narcissique pour se sentir affectivement plus en sécurité."}]}, {"id": "allie", "label": "Allié", "description": "Le rôle des cartes « Allié » est de faire appel à la partie de l'enfant qui détient les capacités de changement. L'enfant peut puiser à volonté l'aide dont il a besoin dans le gigantesque réservoir des possibles de son inconscient personnel ou collectif. Comme le héros, il a constamment à sa disposition un allié qui le soutient et lui enseigne la solution subtile. La « partie qui sait tout » activera tout naturellement le travail psychique nécessaire à la résolution du conflit intérieur sans que l'enfant s'en rende compte. Cet assistant est personnifié afin que l'enfant puisse facilement communiquer avec lui. Ce processus conduit à un apprentissage de l'écoute intérieure et de l'autonomie. En effet, lorsque d'autres difficultés surgiront sur son chemin, le petit pourra s'appuyer sur sa capacité à se sentir guidé vers les bonnes idées pour les surmonter.", "cartes": [{"nom": "L'Ange", "mots_cles": "", "enseignement": "la protection", "pouvoir": "", "symbolique": "Lumineux et aérien, l'Ange gardien est celui qui se pose à nos côtés pour nous protéger. Il vient du monde céleste jusque sur terre pour nous accompagner et suivre la juste voie ou pour nous annoncer de bonnes nouvelles. L'enfant peut l'imaginer debout, marchant à ses côtés ou voletant au-dessus de sa tête.", "interpretation": "L'Ange encourage l'enfant à se dépasser en lui rappelant qu'il a en lui de belles ressources qu'il a oubliées. Il lui apporte l'appui dont il a besoin. Grâce à la présence réconfortante de ce guide spirituel, le petit pourra se libérer de ce qui l'entrave et avancer plus sereinement."}, {"nom": "L'Elfe", "mots_cles": "", "enseignement": "l'intelligence du cœur", "pouvoir": "", "symbolique": "Doté d'un grand savoir, l'Elfe est un être surnaturel d'une grande beauté dont l'âge peut atteindre des centaines d'années. Ce chasseur nomade, très attaché à la forêt, parcourt le monde en s'inspirant de la nature pour trouver les meilleures solutions. Il ressemble aux hommes à quelques différences près : il possède des oreilles pointues et une vision nocturne. Maître en méditation, il peut programmer une transe profonde le temps qu'il souhaite. Son intuition est si forte qu'il perçoit même les passages secrets, invisibles aux yeux des humains.", "interpretation": "L'Elfe enseigne à l'enfant l'intelligence du cœur et lui donne la faculté d'élargir sa vision de l'existence tout en affinant son écoute intérieure. Des éléments nouveaux sont prêts à surgir, permettant au petit de passer sur un mode intuitif pour trouver une idée salutaire."}, {"nom": "La Fée", "mots_cles": "", "enseignement": "exploiter ses dons", "pouvoir": "", "symbolique": "Dotée de grands pouvoirs magiques, la Fée est sans aucun doute la plus célèbre et la plus plébiscitée des puissances surnaturelles. Elle est la marraine de l'enfant, substitut de la figure maternelle qui aime et sécurise. Dès la naissance, elle confère à l'enfant un talent spécifique et l'aide à bien évoluer au cours de son existence en exauçant ses vœux pour attirer le changement.", "interpretation": "La Fée incite l'enfant à retrouver et à exploiter l'un des dons qu'il a eu en héritage et lui donne la capacité de construire un projet qui n'avait pas encore été réalisé. Elle réveille ainsi sa capacité à faire face aux événements avec confiance afin d'accéder à sa propre transformation positive pour devenir adulte."}, {"nom": "Le Génie", "mots_cles": "", "enseignement": "croire en soi", "pouvoir": "", "symbolique": "Ce personnage surnaturel provient du mot « Djinn », un être invisible de l'univers oriental. Caché dans l'espace réduit et sombre de sa lampe, il parvient à s'en échapper lorsqu'une personne frotte son abri. Le Génie a le pouvoir d'exaucer trois vœux en phase avec ce que souhaite son maître, le possesseur de la lampe magique.", "interpretation": "Cette carte signifie qu'il est temps pour l'enfant de planifier une résolution restée dans l'ombre. Par manque d'assurance, ce projet avait été laissé en friche. En croyant à sa réalisation, il pourra enfin le concrétiser."}, {"nom": "La Gentille Sorcière", "mots_cles": "", "enseignement": "la créativité", "pouvoir": "", "symbolique": "La Sorcière était autrefois une magicienne guérisseuse dont la connaissance des plantes était incomparable. Elle devint ensuite le symbole des forces négatives dont on avait peur. Sa fonction est toutefois restée la même au cours du temps puisqu'on imagine toujours qu'elle confectionne des potions et autres philtres dont elle a le secret. Elle est toujours représentée vêtue de noir, portant un chapeau en forme de cône du pouvoir pointant vers le ciel pour une meilleure inspiration. Son balai la propulse dans d'autres espaces-temps et éloigne les forces négatives au même titre que sa baguette magique.", "interpretation": "La Sorcière transmet à l'enfant le pouvoir de maîtriser ses impulsions négatives. Elle lui enseigne qu'il est possible de transformer ce qui l'inquiète, ce qui lui fait peur ou ce qui le bloque pour ensuite s'envoler au-dessus des problèmes et modifier sa vision des choses. Il pourra alors appréhender la vie différemment et anticiper les nouvelles opportunités."}, {"nom": "La Licorne", "mots_cles": "", "enseignement": "l'imagination", "pouvoir": "", "symbolique": "La Licorne incarne la force, l'indépendance et la pureté. À l'aise sur terre comme au ciel, cet animal mythique détient la capacité de maintenir l'équilibre parfait. Posée au milieu de son front, zone de l'intuition, sa corne puissante lui donne le don de clairvoyance et lui permet de percevoir l'arrivée d'un danger et de le repousser. Sa robe blanche indique qu'une transformation positive est en cours.", "interpretation": "La Licorne signale à l'enfant que les moments de solitude sont nécessaires pour son équilibre psychique. Tout en étant attaché à ses jeux, à sa maison, à son apprentissage, il lui est particulièrement bénéfique maintenant de se poser calmement pour se connecter à son imagerie intérieure et harmoniser ses deux cerveaux. Des solutions harmonieuses en jailliront."}, {"nom": "Le Lutin", "mots_cles": "", "enseignement": "l'optimisme", "pouvoir": "", "symbolique": "Petit de taille, ce farfadet est grand par son intelligence et sa malice. Même quand tout semble perdu, cet être facétieux trouve le moyen de déjouer les mauvais sorts et de tourner l'aventure à son avantage. Son éternelle jeunesse lui accorde la curiosité pour explorer toutes les facettes de la vie. Il est souvent représenté comme un personnage enjoué et travailleur, à l'image des lutins qui travaillent pour le père Noël ou des sept nains de Blanche-Neige.", "interpretation": "Le Lutin enseigne au petit qu'il doit se faire confiance et toujours garder espoir, même quand il a déjà essayé de trouver une solution et qu'il n'y est pas parvenu. En préservant un esprit ouvert et optimiste il peut découvrir de nouvelles idées auxquelles il n'avait pas pensé."}, {"nom": "Le Magicien", "mots_cles": "", "enseignement": "la persévérance", "pouvoir": "", "symbolique": "Le Magicien a plus d'un tour dans son chapeau. Il a le pouvoir de faire disparaître des objets, d'en faire apparaître de nouveaux ou de les transformer. Il réussit ses exploits grâce à sa baguette magique, symbole du pouvoir du surnaturel sur le matériel. Lui seul détient la connaissance des formules magiques qui libèrent ou enferment. Et il garde jalousement ses secrets.", "interpretation": "Le Magicien rappelle que l'enfant a la possibilité d'agir sur son environnement. Pour provoquer une transformation, il lui faut maîtriser son impulsivité et laisser place à la connaissance et à l'habileté. En s'exerçant à renouveler ses envies de bien faire, il renforce sa capacité à changer ce qui le dérange."}, {"nom": "Le Messager", "mots_cles": "", "enseignement": "la confiance", "pouvoir": "", "symbolique": "Le Messager détient une information importante. Il lui faut du temps pour arriver car la missive peut venir de loin. Sa lecture peut ouvrir à une disposition d'esprit différente car toute information nouvelle influence le cours des événements. Personne d'autre ne sait ce qu'il y a d'inscrit dans la lettre car le Messager ne fait que transmettre ; il est le gardien d'un message dont le contenu est gardé secret jusqu'à ce qu'il parvienne à son destinataire.", "interpretation": "Le Messager rappelle à l'enfant qu'il faut être patient. Un message bienveillant peut lui parvenir à tout moment, même quand il ne s'y attend pas. Il faut qu'il garde le cœur ouvert pour réceptionner l'enseignement dès qu'il a été déposé au fond de lui."}, {"nom": "Le Sage", "mots_cles": "", "enseignement": "la compassion", "pouvoir": "", "symbolique": "Le Sage est un maître dont la connaissance est infinie. Son désir est d'installer la paix et l'harmonie en lui et autour de lui. Il écoute chacun avec une profonde empathie et respecte l'opinion de tous. Quand il prend la parole, c'est pour délivrer un enseignement qui invite au respect et à l'action juste.", "interpretation": "Le Sage donne à l'enfant accès à des informations inconscientes qui lui permettent de gérer les conflits intérieurs sans porter de jugement. Il peut ainsi mieux comprendre les erreurs passées pour ne pas les reproduire et se remémorer ses succès pour s'en inspirer. La paix revenue, il est plus à l'écoute des solutions."}, {"nom": "La Sirène", "mots_cles": "", "enseignement": "le courage", "pouvoir": "", "symbolique": "Créatures moitié femme, moitié poisson, les sirènes sont des séductrices qui symbolisaient autrefois les dangers de l'océan. La légende raconte que leurs chants ensorcelants faisaient perdre aux marins leur sens de l'orientation.", "interpretation": "La Sirène annonce au petit qu'il lui serait bénéfique de plonger dans son univers instinctif afin de faire remonter à la surface mentale des éléments plus profonds qu'il avait dissimulés. Lorsque ces informations englouties émergent, l'enfant peut s'en décharger en les exprimant ou en les utilisant comme des balises pour mieux reconnaître les futurs écueils et virer de bord au bon moment."}, {"nom": "Pégase, le Cheval ailé", "mots_cles": "", "enseignement": "l'inspiration", "pouvoir": "", "symbolique": "Fils de Poséidon, le dieu des profondeurs océaniques, Pégase possède la puissance du cheval, alliée à la légèreté de l'oiseau. L'enfourcher permet d'accéder à un plan plus subtil dans la mythologie grecque comme dans le chamanisme. Cet étalon ailé est à l'origine d'une fontaine mythique, Hippocrène. Muses et poètes viennent puiser l'inspiration dans cette source de connaissance.", "interpretation": "Pégase répond au désir inconscient de l'enfant de trouver l'inspiration pour de nouvelles solutions. Il l'invite à s'élever plus haut, au-dessus des soucis et des problèmes, pour les transcender et obtenir en retour des informations, une autre façon de voir les choses pour accéder à un nouveau savoir."}, {"nom": "Le Justicier", "mots_cles": "", "enseignement": "l'intégrité", "pouvoir": "", "symbolique": "De Zorro à Superman, en passant par Fantomas ou Robin des bois, nombre de justiciers ont peuplé notre inconscient collectif. Ils sont tous motivés par un idéal de justice, qui les pousse à défendre des victimes en combattant les mauvais éléments de la société, de façon moins conventionnelle et plus expéditive que le ferait un juge. Leur double identité leur permet d'intégrer la souffrance en tant qu'humain, tout en possédant de formidables pouvoirs dès qu'ils deviennent de superhéros masqués.", "interpretation": "Les enfants aiment ce qui est cohérent et juste, pour eux comme pour leurs camarades. Ainsi, il leur est difficile d'admettre une punition ou une mise à l'écart qui n'a pas été expliquée clairement. Le Justicier les rassure : il saura rétablir l'harmonie. Il est une force sécurisante qui aide l'enfant à intégrer qu'une cause juste est toujours gagnante."}, {"nom": "Le Druide", "mots_cles": "", "enseignement": "la connaissance", "pouvoir": "", "symbolique": "Dans la culture celtique, le druide est un homme de grande sagesse habitant la plupart du temps au cœur des forêts. Considéré comme intermédiaire entre les hommes et les dieux, son autorité et sa clairvoyance sont incontestables. Maître des quatre éléments, eau, feu, terre, air, il utilise les forces de la nature pour rétablir la paix. Sa parfaite connaissance des plantes médicinales, dont la fameuse cueillette du gui à la faucille d'or, lui permet de guérir les blessés et de fabriquer des talismans de protection.", "interpretation": "Comme Panoramix, qui a le pouvoir de concocter une potion apportant force et courage aux villageois gaulois, le Druide permet à l'enfant de puiser en lui une connaissance inconsciente afin de se reconnecter à sa véritable nature. Un galet, du sable, une feuille... Tous les éléments naturels qu'il touchera lui rappelleront qu'il est en phase avec ce qui l'entoure et aidé par la Nature."}]}, {"id": "objet", "label": "Objet magique", "description": "Ces cartes représentent l'outil indispensable pour résoudre la problématique du héros. Ce ne sont pas des solutions toutes faites, « prêtes à penser », mais plutôt des suggestions d'ouverture, des soutiens au pouvoir imaginaire de l'enfant. Il n'est donc pas question de lui souffler la solution et toutes les possibilités seront acceptées, tant que les histoires finissent bien. C'est l'enfant, aidé de son allié, qui doit trouver le dénouement. Les recherches sur le sujet prouvent que s'identifier à un personnage fictif positif a une influence heureuse directe sur le comportement de l'enfant dans la vie réelle et que ce changement provient de celui inspiré par le personnage. L'aide apportée au héros permet à l'inconscient d'enregistrer une solution qui n'a pas eu lieu dans la vie réelle au niveau conscient. La « partie qui sait tout » utilise toutes les possibilités d'ouverture afin d'installer un mieux-être. À nouveau, nul besoin de reparler du problème de l'enfant. Faites confiance à son inconscient, qui fera le travail tout seul...", "cartes": [{"nom": "L'Anneau d'or", "mots_cles": "", "enseignement": "", "pouvoir": "l'engagement", "symbolique": "L'Anneau matérialise l'engagement. Dans la pensée grecque, il devait se porter à l'annulaire car on pensait que ce doigt était directement relié au cœur par une « veine de l'amour », ce qui lui conférait une protection amoureuse. Par extension, cette bague révèle l'ouverture de cœur et la fidélité de celui qui la porte, un lien que rien ne peut briser. L'Anneau est en or, métal inaltérable symbolisant la réalisation intérieure. Celui qui le porte témoigne de son attachement à une éthique irréprochable qu'il a su gagner par sa moralité.", "interpretation": "L'Anneau d'or rappelle à l'enfant qu'il est essentiel d'agir de façon claire en se laissant guider par son cœur. Il l'invite à rester fidèle à ses idées et en harmonie avec ses désirs les plus profonds pour pouvoir être reconnu à sa juste valeur par les gens qui l'entourent."}, {"nom": "La Baguette magique", "mots_cles": "", "enseignement": "", "pouvoir": "la transformation", "symbolique": "Cet objet magique est le symbole du changement puisque la Baguette permet de transformer le négatif en positif. Ce pouvoir puissant sur les éléments a de tout temps été décliné sous différentes formes. En Égypte ancienne, il témoignait de la domination spirituelle du pharaon ou de l'initié. Chez les Amérindiens, le bâton de parole confère à celui qui le détient la capacité de s'exprimer pleinement. Le sceptre des rois ou des évêques justifie leur haute fonction. C'est aussi l'outil de transformation essentiel de la fée pour modifier ce qui n'est pas juste, ou encore le balai de la sorcière qui la dote du pouvoir de se télétransporter.", "interpretation": "La Baguette permet à l'enfant d'extérioriser son pouvoir de transformation. Elle lui rappelle que le changement est possible. Il suffit d'activer le bâton magique en projetant son envie de modifier ce qui lui déplaît. Le fait d'y croire active puissamment le changement intérieur."}, {"nom": "Le Bouclier d'argent", "mots_cles": "", "enseignement": "", "pouvoir": "la sécurité", "symbolique": "À l'abri derrière son Bouclier, le guerrier est préservé des coups qui peuvent lui être portés. Il peut ainsi avancer vers son but en évitant de se faire toucher par ses ennemis. Il est en argent, une matière dotée d'une énergie puissante qui repousse le mal. Dans plusieurs cultures, ce métal préserve des mauvais sorts en renvoyant le négatif vers celui qui l'a lancé.", "interpretation": "Cet outil magique permet à l'enfant d'avancer vers les difficultés de la vie en se sentant sécurisé. Protégé par le Bouclier, il s'autorise à avoir confiance afin de combattre ses peurs et ses conflits intérieurs."}, {"nom": "La Boule de cristal", "mots_cles": "", "enseignement": "", "pouvoir": "la concentration", "symbolique": "Cette sphère transparente et lumineuse est réputée être le support des voyantes. En se concentrant sur cette Boule, les mediums ont accès à des informations d'un autre espace-temps. Ils pourraient ainsi deviner ce que réserve l'avenir.", "interpretation": "La Boule de cristal rappelle à l'enfant qu'il détient l'aptitude d'activer ce qu'il a vraiment envie de vivre dans un futur proche. Il a juste à se focaliser sur les changements positifs qu'il souhaite installer et à les vivre comme s'ils étaient programmés pour en ressentir les effets bénéfiques instantanément en lui et autour de lui."}, {"nom": "Le Chaudron ensorcelant", "mots_cles": "", "enseignement": "", "pouvoir": "la force", "symbolique": "Le magicien ou la sorcière concocte dans son Chaudron des philtres d'amour et des boissons qui apportent force et courage, à l'image du druide Panoramix qui compose la potion magique d'Astérix et Obélix. Des ingrédients très précis sont mélangés. En règle générale, le mage suit scrupuleusement les recettes inscrites sur son grimoire tout en y ajoutant la formule spécifique qui lui a été léguée par les Anciens.", "interpretation": "Le Chaudron bouillonne de toutes les idées qui sont déjà à l'intérieur de l'enfant. Cet objet lui permet d'associer divers éléments conscients et inconscients afin de fabriquer un tout nouvel outil de connaissance qui l'aidera à régler ses conflits intérieurs. Il crée ce dont il a besoin pour grandir : une potion pour se sentir aimé, avoir confiance en lui, se sentir fort..."}, {"nom": "Le Coquillage parlant", "mots_cles": "", "enseignement": "", "pouvoir": "l'intuition", "symbolique": "Selon la légende, en approchant un coquillage de son oreille, on pourrait entendre le bruit de la mer et d'autres messages de l'univers. Ce son proviendrait en fait de notre propre circulation sanguine qui serait amplifiée. Certains imaginent pourtant que bien des secrets sont gardés à l'intérieur, révélés uniquement à ceux qui sont aptes à les découvrir. Ainsi les Grecs pensaient que Vénus, déesse de l'amour, avait été découverte à l'ouverture d'un coquillage, telle une perle. La coquille est devenue par la suite l'emblème de protection de saint Jacques pour les pèlerins qui pouvaient ainsi se reconnaître entre eux sur le chemin de Compostelle.", "interpretation": "Lorsqu'on l'écoute, le Coquillage nous parle de nos désirs intérieurs pour nous révéler un précieux savoir. Il rappelle à l'enfant que la connaissance est en lui, bien cachée. Toutefois elle ne lui sera accessible que s'il est prêt à s'ouvrir à ce trésor minutieusement délivré par ses plus belles ressources."}, {"nom": "L'Épée de lumière", "mots_cles": "", "enseignement": "", "pouvoir": "la justice", "symbolique": "Fabriquée pour se défendre, cette Épée droite et solide reflète la lumière de la justice divine. Les chevaliers qui partaient en croisade la personnifiaient en lui attribuant une puissance hors du commun et un pouvoir magique, à l'image d'Excalibur, l'épée du légendaire roi Arthur. Cette arme était réputée pour rendre son détenteur invincible. Elle lui permettait de lutter contre tous les ennemis humains et surnaturels.", "interpretation": "Grâce à ses deux faces tranchantes, l'Épée de lumière révèle à l'enfant ses atouts et ses faiblesses. Cette prise de conscience le guide vers la solution la plus juste pour combattre les difficultés anciennes et couper les liens nocifs qui l'entravaient jusqu'à maintenant."}, {"nom": "Le Lotus épanoui", "mots_cles": "", "enseignement": "", "pouvoir": "la réussite", "symbolique": "Le lotus pousse dans l'eau trouble et boueuse pour donner naissance à une fleur pure, d'une grande beauté. Les Égyptiens le comparaient à Râ car, comme le dieu-soleil, il s'ouvre à l'aube dès que l'astre se lève et se referme dès son coucher. Symbole sacré en Extrême-Orient, il représente la transformation et la réalisation des possibles.", "interpretation": "Cette Fleur magique révèle que tout peut se transformer. Même les plus grandes difficultés et les états émotionnels les plus sombres peuvent finalement donner accès à l'épanouissement. Depuis les profondeurs inconscientes, une solution qui semblait impossible jusqu'alors s'ouvre à l'enfant. La connaissance révélée lui apporte le changement souhaité."}, {"nom": "Le Miroir enchanté", "mots_cles": "", "enseignement": "", "pouvoir": "le respect de soi", "symbolique": "Le Miroir permet d'obtenir un fidèle reflet de soi-même. Il faut être prêt à accueillir notre véritable nature. Parfois, certains aspects dérangent et peuvent donner envie de briser cette image qui ne nous plaît pas. Dans les légendes, le Miroir est doté du pouvoir de lire dans l'âme de la personne et de restituer sa vraie personnalité, sans artifice. Il juge sa valeur pour connaître ses intentions, bonnes ou mauvaises. Ainsi le Miroir déduit logiquement ce qu'il adviendra de cette personne dans le futur si ses intentions ne changent pas. On lui accorde également la capacité de retrouver des êtres que l'on aurait perdus.", "interpretation": "Le Miroir enchanté permet à l'enfant de se voir tel qu'il est réellement. Il révèle ses facettes intimes, parfois cachées aux yeux des autres, ainsi que tout ce qui le sublime. Ce reflet l'aide à s'accueillir à cœur ouvert, à reconnaître toute sa puissance afin de s'en inspirer et à poser un autre regard sur sa personnalité. Le petit peut alors envisager de vivre un futur en accord avec sa vraie nature."}, {"nom": "Le Parchemin codé", "mots_cles": "", "enseignement": "", "pouvoir": "la motivation", "symbolique": "Ancêtre du papier, le Parchemin permettait d'envoyer un message ou bien d'inscrire des formules secrètes. Afin de découvrir ce qui était écrit, il fallait le dérouler à deux mains et parfois décoder les symboles ésotériques.", "interpretation": "Cette carte nous apprend que l'enfant a pu se décourager dans le passé. Elle lui rappelle que son inconscient parvient à déchiffrer les indices qui, d'un premier abord, lui semblaient incompréhensibles. Le petit est désormais prêt à comprendre ce qui n'avait pas été compris avant."}, {"nom": "La Porte secrète", "mots_cles": "", "enseignement": "", "pouvoir": "la révélation", "symbolique": "La Porte représente la fermeture ou l'ouverture. Certaines personnes peuvent se sentir enfermées, bloquées, et se plaignent de stagner puisqu'elles n'arrivent pas à en franchir le seuil. D'autres découvrent que la clé est là et qu'il suffit de la glisser dans la serrure pour enfin passer de l'autre côté. Le nom de la Porte révèle qu'il s'agit d'un passage secret connu seulement des initiés.", "interpretation": "Cette carte invite l'enfant à accéder à la connaissance qui se trouve derrière la Porte. Il s'agit d'une capacité, d'une aptitude que lui seul peut atteindre en passant du côté de la solution. Il faut auparavant renoncer à une vieille habitude, une difficulté passée, pour parvenir à la révélation et en sortir grandi de l'autre côté."}, {"nom": "Le Sablier d'étincelles", "mots_cles": "", "enseignement": "", "pouvoir": "la patience", "symbolique": "Le Sablier représente le temps qui passe grâce au sable fin qui s'écoule au travers d'un goulot étroit. Utilisé lors des jeux de société, l'enfant en connaît la valeur : il mesure le temps de réflexion imparti aux joueurs pour prendre la bonne décision.", "interpretation": "Les étincelles, telles des pensées lumineuses, prennent un certain temps pour passer de l'espace inconscient à l'espace conscient de l'enfant. Inutile de vouloir accélérer la vitesse du changement puisque les étincelles traversent d'abord un passage qui oblige l'enfant à mieux considérer ce qu'il souhaite vivre comme dénouement positif. Le glissement des idées se fait au rythme nécessaire. Une fois libérées, elles se déposent au plus profond de lui au moment opportun."}, {"nom": "Le Coffre précieux", "mots_cles": "", "enseignement": "", "pouvoir": "la découverte", "symbolique": "Le coffre est réputé contenir des informations inestimables. On y range des bijoux, des pièces d'or, des documents, ou autres objets de grande valeur qui doivent être protégés. Dans notre inconscient collectif, le coffre est souvent associé aux histoires de corsaires, car ce qu'il détient est recherché par tous. Voilà pourquoi les pirates parcourent les mers afin de mettre la main sur un précieux butin. Il est donc synonyme de richesse bien cachée, parfois même enterré depuis un temps lointain. Un tel profit, cela se mérite...", "interpretation": "Le Coffre précieux permet à l'enfant de récupérer des ressources qu'il a enfouies au fond de lui et qu'il est temps de retrouver. Ensuite, il pourra à son tour y déposer tous les symboles qu'il souhaite garder secrètement pour se sentir de mieux en mieux."}, {"nom": "La Cape fantastique", "mots_cles": "", "enseignement": "", "pouvoir": "la métamorphose", "symbolique": "Dans l'Antiquité, la cape servait à se protéger du vent ou de la tempête. Elle sera ensuite utilisée par les pèlerins, puis les mousquetaires, afin de manier leur épée de façon fluide et habile. Pour les Templiers, ce vêtement symbolisait la métamorphose : lorsque l'initiation était terminée, l'homme se retirait intérieurement en lui-même, investi de nouveaux pouvoirs. Cette idée symbolise l'invisibilité, qui permet alors de renaître à un autre statut, plus élevé.", "interpretation": "La Cape fantastique confère à l'enfant un atout majeur : pouvoir se retirer dans d'autres espaces de la conscience et trouver des résolutions à ces problèmes. S'il le souhaite, il peut également l'utiliser pour se mettre à l'abri de ce qui le dérange, afin d'établir une connexion encore plus puissante avec ses aspirations profondes."}]}], "tirages": [{"type": "p", "text": "CARTES CRÉATIVES", "list": false}, {"type": "p", "text": "de Lise Bartoli", "list": false}, {"type": "p", "text": "Transcription du livret d'accompagnement", "list": false}, {"type": "h2", "text": "La Salle des rêves"}, {"type": "p", "text": "[…] faire, c'est sa « partie qui sait tout ». Grâce à elle, il s'envole à sa manière vers son monde magique, là où se trouve la Salle des rêves. Le petit crée son univers à sa façon. Les enfants ont mille manières originales d'accéder à leur monde magique et leur imagination n'a pas de limite. La plupart évoquent une plage, le ski, la montagne ou le jardin « comme chez grand-mère ». Parfois, le petit s'envole au pays des dragons et des dinosaures, au pays des princesses, dans une magnifique salle de jeux, sur un joyeux paquebot de croisière ou en pleine fête foraine. Certains enfants imaginent des maisons en chocolat, près d'une fontaine de bonbons.", "list": false}, {"type": "p", "text": "Ce processus de dissociation (l'enfant est ici et maintenant et en même temps dans un autre univers, qu'il construit et qui lui fait plaisir) est le moyen le plus sûr de savoir qu'il est connecté à son inconscient, ouvert à la transformation.", "list": false}, {"type": "p", "text": "La Salle des rêves permet à l'enfant de se connecter à son inconscient familial (ce que ses parents, grands-parents et ancêtres ont vécu) et à toutes les informations de l'inconscient collectif (les solutions déjà découvertes par les hommes depuis la nuit des temps), un gigantesque puits de dénouements et de messages !", "list": false}, {"type": "p", "text": "Dès qu'il vous dit qu'il est dans sa Salle, encouragez-le à la concrétiser en lui demandant les couleurs qu'il perçoit aux murs, s'il y a des sièges, s'il souhaite ajouter des objets ou des coussins, des couvertures, etc.", "list": false}, {"type": "p", "text": "Puis suggérez qu'il aperçoit une gigantesque bibliothèque avec des milliers de livres. Ces ouvrages peuvent être lus même sans savoir vraiment lire car sa « partie qui sait tout » détient la formidable capacité d'absorber le contenu de l'histoire et de le restituer à l'enfant. Ensuite, faites la suggestion suivante :", "list": false}, {"type": "p", "text": "La Salle des rêves contient :", "list": false}, {"type": "p", "text": "tous les livres que tu as déjà lus ou qu'on t'a déjà lus ;", "list": true}, {"type": "p", "text": "tous les livres que tes parents, grands-parents et même arrière-grands-parents ont déjà lus ;", "list": true}, {"type": "p", "text": "tous les livres qui ont été écrits, même il y a très longtemps ;", "list": true}, {"type": "p", "text": "tous les plus beaux rêves du monde.", "list": true}, {"type": "p", "text": "Puis proposez qu'un livre précis l'attire intuitivement. Est-ce un grand ou petit livre ? Contient-il des images ? Peut-être peut-il lire son titre ?", "list": false}, {"type": "p", "text": "Le petit a juste besoin de choisir son livre ou plutôt de se laisser choisir par lui car son inconscient sait quel ouvrage sera le bon parmi ceux de la bibliothèque magique. Il le garde précieusement avec lui, en percevant toute l'énergie de l'ouvrage.", "list": false}, {"type": "p", "text": "Une fois le livre imaginaire en main, il tire les cartes créatives. Soit il développe son conte en restant dans l'inspiration de la Salle des rêves, soit il écoute l'histoire que l'adulte lui raconte.", "list": false}, {"type": "p", "text": "Dans la réalité, il peut garder les yeux fermés ou les ouvrir s'il préfère. Il est essentiel de le laisser faire à sa guise.", "list": false}, {"type": "h2", "text": "Les différents tirages"}, {"type": "h3", "text": "Tirage en quatre phases pour un ou plusieurs enfants"}, {"type": "p", "text": "Il s'agit de laisser l'enfant inventer une histoire à l'aide des quatre cartes qu'il tire faces cachées dans chacune des catégories selon l'ordre suivant :", "list": false}, {"type": "p", "text": "Une carte HÉROS", "list": true}, {"type": "p", "text": "Une carte PROBLÈME DU HÉROS", "list": true}, {"type": "p", "text": "Une carte ALLIÉ", "list": true}, {"type": "p", "text": "Une carte OBJET MAGIQUE", "list": true}, {"type": "p", "text": "Les plus petits, qui ne savent pas lire, pourront repérer les couleurs qui différencient chaque phase.", "list": false}, {"type": "p", "text": "Commencez par rassembler les cartes par catégories en faisant quatre paquets distincts. Mélangez et étalez les cartes du premier paquet (Héros), faces cachées, puis demandez à l'enfant d'en tirer une. Laissez le temps à l'enfant de décrire l'endroit où se trouve le héros, comment il est habillé, etc. Puis l'enfant tire la carte Problème du héros et met en scène ce que vit le personnage fictif. Il peut également imaginer ce qui s'est passé avant (par exemple, pourquoi le héros est devenu triste). Lors de la troisième phase, l'enfant peut communiquer avec l'allié du héros, pour qu'il lui donne un enseignement. La dernière carte permettra de résoudre l'histoire grâce à l'objet magique dont aide l'enfant à trouver un dénouement positif.", "list": false}, {"type": "p", "text": "Lorsqu'il y a plusieurs enfants, chacun raconte à tour de rôle l'histoire qui lui vient à l'esprit à l'aide des quatre cartes tirées par l'un d'entre eux. Il est essentiel de ne pas les analyser ni évaluer les contes de chacun mais de les accueillir tout simplement.", "list": false}, {"type": "p", "text": "Points importants", "list": false}, {"type": "p", "text": "Laissez l'enfant accueillir les idées qui lui viennent à l'esprit sans donner votre avis.", "list": true}, {"type": "p", "text": "Incitez-le à multiplier les détails de son histoire (par exemple : comment est habillé le Roi ? De quelle couleur est sa couronne ? Où se trouve-t-il ? Est-il seul ou non ? etc.). L'enfant « entrera » ainsi encore plus profondément dans son histoire. La dissociation créée à ce moment-là le guide vers un état propice à la connexion inconsciente.", "list": true}, {"type": "p", "text": "Ne faites pas ouvertement le lien entre son histoire et une difficulté que vous avez repérée chez lui afin de ne pas ajouter de la pression.", "list": true}, {"type": "p", "text": "Suggérez toujours que la fin soit heureuse, mais sans lui souffler ce que vous auriez aimé comme fin. Faites confiance à son inconscient qui choisira ce qui lui convient le mieux. À la fin, félicitez-le pour sa solution et partagez sa joie lorsque le héros réussit.", "list": true}, {"type": "p", "text": "Lorsque c'est l'adulte qui crée un conte pour l'enfant, il suit le même processus, mis à part que c'est lui qui choisit les cartes à l'aveugle. Employez des mots simples.", "list": true}, {"type": "h3", "text": "Tirage à deux : Le jeu des émotions"}, {"type": "p", "text": "Les enfants ont besoin qu'on les écoute mais ils ne savent pas toujours exprimer ce qu'ils ont sur le cœur. Aussi il est souvent nécessaire de les aider à mettre des mots sur leurs impressions ou leurs difficultés (« Je sens bien que tu es triste » ou « Tu as l'air en colère, je le vois, même si je ne sais pas pourquoi »). À l'aide du jeu des émotions, l'enfant va apprendre à mieux s'exprimer.", "list": false}, {"type": "p", "text": "Cet exercice ludique peut aussi être pratiqué avec plusieurs élèves d'une même classe pour mieux différencier les émotions.", "list": false}, {"type": "p", "text": "Dans ce tirage, il s'agit d'isoler les cartes et d'en choisir une au hasard, de mêler la situation ou l'émotion de la carte sélectionnée avec ce que l'enfant devra exprimer. Quand il a trouvé, c'est à son tour de se laisser piocher par une carte Problème choisie au hasard.", "list": false}, {"type": "p", "text": "Profitez de ce moment pour lui demander s'il a déjà vécu ce type de sensation. Laissez-le ensuite exprimer, sans le forcer, une situation liée à cette émotion. En parler lui fera du bien.", "list": false}, {"type": "h3", "text": "Tirage pour adulte : L'enfant intérieur"}, {"type": "p", "text": "Souvent, les enfants rejouent sans le savoir des difficultés que leurs parents ont connues au même âge. Afin d'éviter de transmettre ces informations à votre enfant, ce tirage exclusivement pour adulte vous est proposé. Il vous permettra de vous connecter à votre enfant intérieur et de l'apaiser à l'aide d'un conte.", "list": false}, {"type": "p", "text": "Prenez un temps pour vous détendre grâce à votre respiration abdominale. Puis, les yeux fermés, imaginez que vous soulevez un voile. Derrière se tient votre enfant intérieur. Percevez intuitivement quel âge il peut avoir et ce dont il a besoin (d'écoute ? de réconfort ? de compréhension ?). Vous pouvez imaginer le prendre dans vos bras, le cajoler. Puis, en gardant sa présence à vos côtés, tirez au hasard une carte pour chaque phase.", "list": false}, {"type": "p", "text": "Refermez les yeux pour retrouver la présence de votre enfant intérieur. Racontez-lui le conte qui vous vient à l'esprit en insistant sur la fin heureuse.", "list": false}, {"type": "p", "text": "Une fois que vous avez terminé, prenez l'enfant dans vos bras tout en lui adressant une belle lumière pacifique. Quand il est apaisé, dites-lui au revoir et revenez dans l'ici et maintenant en gardant cet apaisement dans votre cœur.", "list": false}]};
+
+const THEME_COLORS = {
+  heros: "var(--heros)",
+  probleme: "var(--probleme)",
+  allie: "var(--allie)",
+  objet: "var(--objet)",
+};
+const THEME_LABELS = {
+  heros: "Héros",
+  probleme: "Problème du héros",
+  allie: "Allié",
+  objet: "Objet magique",
+};
+
+// état: { themeId: Set<cardIndex> }
+const selection = { heros: new Set(), probleme: new Set(), allie: new Set(), objet: new Set() };
+
+const $themes = document.getElementById("themes");
+const $selected = document.getElementById("selected-list");
+const $total = document.getElementById("total");
+const $prompt = document.getElementById("prompt");
+const $promptWrap = document.getElementById("prompt-wrap");
+const $copy = document.getElementById("copy");
+const $toast = document.getElementById("toast");
+
+function render() {
+  $themes.innerHTML = "";
+  DATA.themes.forEach(theme => {
+    const sec = document.createElement("div");
+    sec.className = "theme";
+    sec.style.setProperty("--theme-color", THEME_COLORS[theme.id]);
+    const selCount = selection[theme.id].size;
+    sec.innerHTML = `
+      <h2>${theme.label} <span class="theme-count">${selCount}</span></h2>
+      <p class="theme-hint">Cliquez pour sélectionner (0, 1 ou plusieurs cartes).</p>
+      <div class="cards"></div>
+    `;
+    const grid = sec.querySelector(".cards");
+    theme.cartes.forEach((c, i) => {
+      const el = document.createElement("div");
+      el.className = "card" + (selection[theme.id].has(i) ? " selected" : "");
+      const keys = c.mots_cles || c.enseignement || c.pouvoir || "";
+      const keyPrefix = c.enseignement ? "Enseignement : " : (c.pouvoir ? "Pouvoir : " : "");
+      el.innerHTML = `
+        <span class="card-name">${c.nom}</span>
+        ${keys ? `<span class="card-keys">${keyPrefix}${keys}</span>` : ""}
+      `;
+      el.onclick = () => {
+        if (selection[theme.id].has(i)) selection[theme.id].delete(i);
+        else selection[theme.id].add(i);
+        render();
+      };
+      grid.appendChild(el);
+    });
+    $themes.appendChild(sec);
+  });
+  renderSelected();
+}
+
+function renderSelected() {
+  const total = Object.values(selection).reduce((s, set) => s + set.size, 0);
+  $total.textContent = total;
+  if (total === 0) {
+    $selected.innerHTML = '<p class="empty">Cliquez sur les cartes ci-contre pour composer votre tirage.</p>';
+    $promptWrap.style.display = "none";
+    $copy.disabled = true;
+    return;
+  }
+  const blocks = [];
+  DATA.themes.forEach(theme => {
+    const indices = [...selection[theme.id]];
+    if (!indices.length) return;
+    indices.forEach(i => {
+      const c = theme.cartes[i];
+      const keys = c.mots_cles || c.enseignement || c.pouvoir || "";
+      const keyLabel = c.enseignement ? "Enseignement" : (c.pouvoir ? "Pouvoir" : "Mots-clés");
+      blocks.push(`
+        <div class="selected-card" style="--theme-color:${THEME_COLORS[theme.id]}">
+          <div class="sc-head">
+            <span class="sc-name">${c.nom}</span>
+            <span class="sc-theme">${THEME_LABELS[theme.id]}</span>
+          </div>
+          ${keys ? `<div class="sc-keys"><b>${keyLabel} :</b> ${keys}</div>` : ""}
+          ${c.symbolique ? `<details><summary>Symbolique</summary><p>${escapeHtml(c.symbolique).replaceAll("\n\n","</p><p>")}</p></details>` : ""}
+          ${c.interpretation ? `<details open><summary>Interprétation</summary><p>${escapeHtml(c.interpretation).replaceAll("\n\n","</p><p>")}</p></details>` : ""}
+        </div>
+      `);
+    });
+  });
+  $selected.innerHTML = blocks.join("");
+}
+
+function escapeHtml(s){
+  return (s || "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+
+function buildPrompt() {
+  const parts = [];
+  parts.push("Tu es un praticien spécialisé en accompagnement de l'enfant intérieur et en lecture symbolique des cartes créatives de Lise Bartoli.");
+  parts.push("");
+  parts.push("Voici le tirage qui vient d'être effectué. Pour chaque carte, je te donne sa catégorie, son nom, ses mots-clés (ou enseignement / pouvoir selon la catégorie), sa symbolique d'origine et son interprétation d'origine telles que décrites par Lise Bartoli dans son livret.");
+  parts.push("");
+  parts.push("════════ TIRAGE ════════");
+  DATA.themes.forEach(theme => {
+    const indices = [...selection[theme.id]];
+    if (!indices.length) return;
+    parts.push("");
+    parts.push(`── ${theme.label.toUpperCase()} ──`);
+    indices.forEach(i => {
+      const c = theme.cartes[i];
+      parts.push("");
+      parts.push(`Carte : ${c.nom}`);
+      if (c.mots_cles) parts.push(`Mots-clés : ${c.mots_cles}`);
+      if (c.enseignement) parts.push(`Enseignement : ${c.enseignement}`);
+      if (c.pouvoir) parts.push(`Pouvoir : ${c.pouvoir}`);
+      if (c.symbolique) parts.push(`Symbolique : ${c.symbolique.replace(/\s*\n\s*/g, " ")}`);
+      if (c.interpretation) parts.push(`Interprétation : ${c.interpretation.replace(/\s*\n\s*/g, " ")}`);
+    });
+  });
+  parts.push("");
+  parts.push("════════ DEMANDE ════════");
+  parts.push("");
+  parts.push("À partir de ce tirage, propose :");
+  parts.push("");
+  parts.push("1. **Une interprétation globale** qui tisse ensemble toutes les cartes tirées, en montrant comment les thématiques dialoguent entre elles (héros / problème / allié / objet magique), et quel message d'ensemble s'en dégage.");
+  parts.push("");
+  parts.push("2. **Un conte symbolique court** (10 à 20 phrases) à raconter à l'enfant — ou à l'enfant intérieur de l'adulte — en intégrant naturellement :");
+  parts.push("   - le(s) héros tiré(s) comme personnage(s) central(aux),");
+  parts.push("   - le(s) problème(s) tiré(s) comme nœud dramatique,");
+  parts.push("   - le(s) allié(s) tiré(s) comme guide(s),");
+  parts.push("   - le(s) objet(s) magique(s) tiré(s) comme ressource(s) de dénouement.");
+  parts.push("   Le conte doit se terminer de façon positive et apaisante, sans moraliser ni relier explicitement à une difficulté réelle.");
+  parts.push("");
+  parts.push("3. **Une piste d'ouverture** : une question douce à poser à l'enfant (ou à se poser soi-même) après la lecture du conte, pour approfondir ce que ce tirage vient éclairer.");
+  parts.push("");
+  parts.push("Reste fidèle à l'esprit bienveillant et thérapeutique des cartes de Lise Bartoli : pas d'interprétation plaquée, pas de jugement, et une grande confiance en l'inconscient de la personne pour trouver ses propres solutions.");
+  return parts.join("\n");
+}
+
+document.getElementById("gen").onclick = () => {
+  const total = Object.values(selection).reduce((s, set) => s + set.size, 0);
+  if (total === 0) {
+    showToast("Sélectionne au moins une carte.");
+    return;
+  }
+  $prompt.textContent = buildPrompt();
+  $promptWrap.style.display = "block";
+  $copy.disabled = false;
+};
+
+$copy.onclick = async () => {
+  try {
+    await navigator.clipboard.writeText($prompt.textContent);
+    showToast("Copié dans le presse-papiers");
+  } catch (e) {
+    // Fallback
+    const r = document.createRange();
+    r.selectNode($prompt);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();
+    showToast("Copié dans le presse-papiers");
+  }
+};
+
+document.getElementById("reset").onclick = () => {
+  Object.keys(selection).forEach(k => selection[k].clear());
+  $prompt.textContent = "";
+  $promptWrap.style.display = "none";
+  $copy.disabled = true;
+  render();
+};
+
+function showToast(msg){
+  $toast.textContent = msg;
+  $toast.classList.add("show");
+  setTimeout(() => $toast.classList.remove("show"), 1600);
+}
+
+render();
+</script>
+
+</body>
+</html>
